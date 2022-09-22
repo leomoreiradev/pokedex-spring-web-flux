@@ -3,8 +3,6 @@ package com.api.pokedex.controller;
 
 import com.api.pokedex.model.Pokemon;
 import com.api.pokedex.repository.PokedexRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +11,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
-@NoArgsConstructor
 @RestController
-@RequestMapping(value = "api/v1/pokemons")
+@RequestMapping(value = "/api/v1/pokemons")
 public class PokemonController {
 
-     private PokedexRepository pokedexRepository;
+     private final PokedexRepository pokedexRepository;
 
      @GetMapping
      public Flux<Pokemon> getAllPokemons(){
@@ -28,7 +25,7 @@ public class PokemonController {
      @GetMapping(value ="/{id}")
      public Mono<ResponseEntity<Pokemon>> getPokemon(@PathVariable String id) {
           return pokedexRepository.findById(id)
-                  .map(pokemon -> ResponseEntity.ok(pokemon))
+                  .map(ResponseEntity::ok)
                   .defaultIfEmpty(ResponseEntity.notFound().build());
      }
 

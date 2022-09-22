@@ -6,6 +6,7 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      authentication-database: root
+      authentication-database: admin
+      username: root
       password: feltex
       database: pokedexdb
