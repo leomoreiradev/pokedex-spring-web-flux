@@ -35,5 +35,33 @@ public class PokemonController {
           return pokedexRepository.save(pokemon);
      }
 
+     @PutMapping(value = "/{id}")
+     public Mono<ResponseEntity<Pokemon>> updatePokemon(@PathVariable String id, @RequestBody Pokemon pokemon) {
+          return pokedexRepository.findById(id)
+                  .flatMap(existigPokemon -> {
+                               existigPokemon.setNome(pokemon.getNome());
+                               existigPokemon.setCategoria(pokemon.getCategoria());
+                               existigPokemon.setHabilidade(pokemon.getHabilidade());
+                               existigPokemon.setPeso(pokemon.getPeso());
+                               return pokedexRepository.save(existigPokemon);
+                          })
+                         .map(updatePokemon -> ResponseEntity.ok().body(updatePokemon))
+                         .defaultIfEmpty(ResponseEntity.noContent().build());
+     }
+
+     @DeleteMapping(value = "/{id}")
+     public Mono<ResponseEntity<Void>> deletePokemon(@PathVariable String id) {
+          return pokedexRepository.findById(id)
+                  .flatMap(existingPokemon -> pokedexRepository.delete(existingPokemon)
+                          .then(Mono.just(ResponseEntity.ok().<Void>build()))
+                          )
+                  .defaultIfEmpty(ResponseEntity.notFound().build());
+
+     }
+
+     @DeleteMapping
+     public Mono<Void> deleteAllPokemons() {
+          return pokedexRepository.deleteAll();
+     }
 
 }
